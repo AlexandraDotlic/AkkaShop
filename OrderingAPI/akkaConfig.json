@@ -1,0 +1,20 @@
+{
+  "akka": {
+    "actor": {
+      "provider": "Akka.Cluster.ClusterActorRefProvider, Akka.Cluster"
+    },
+    "remote": {
+      "dot-netty.tcp": {
+        "hostname": "localhost",
+        "port": 0
+      }
+    },
+    "cluster": {
+      "seed-nodes": [
+        "akka.tcp://OrderingCluster@localhost:2551",
+        "akka.tcp://OrderingCluster@localhost:2552"
+      ],
+      "roles": [ "Ordering" ]
+    }
+  }
+}
