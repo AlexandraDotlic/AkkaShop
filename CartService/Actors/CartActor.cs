@@ -11,12 +11,6 @@ using System.Threading.Tasks;
 
 namespace CartService.Actors
 {
-    /// <summary>
-    /// This actor handles two types of messages - AddToCart and RemoveFromCart.
-    /// When it receives an AddToCart message, it persists a CartUpdated event with the item and quantity, and then updates its state to reflect the added items. 
-    /// Similarly, when it receives a RemoveFromCart message, it persists a CartUpdated event with the item and negative quantity, and 
-    /// then updates its state to reflect the removed items. The state is stored in a private property Cart.
-    /// </summary>
     public class CartActor : UntypedPersistentActor
     {
         public override string PersistenceId => nameof(CartActor);
