@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Messages.Events
 {
-    public class OrderCanceled
+    public class CreateOrderFailed
     {
-        public OrderCanceled()
-        {
-        }
-
+      
     }
 }

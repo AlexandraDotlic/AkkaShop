@@ -2,7 +2,7 @@
 using Messages.Commands;
 using Messages.Events;
 
-namespace CartCoordinatorService.Actors
+namespace CartService.Actors
 {
     public class CartCoordinatorActor : ReceiveActor
     {

@@ -22,11 +22,10 @@ namespace OrderingService.Actors
                         Sender.Tell(new OrderFailed("An order is already being processed."));
                         return;
                     }
-
-                    Persist(new OrderCreated(createOrder.Order), _ =>
+                    Order = new Order(OrderStatus.Created, createOrder.Cart);
+                    Persist(new OrderCreated(Order), _ =>
                     {
-                        Order = createOrder.Order;
-                        Sender.Tell(new OrderSuccess(Order.Id));
+                        Sender.Tell(new OrderSuccess());
                     });
                     break;
                 case CancelOrder cancelOrder:
@@ -36,10 +35,10 @@ namespace OrderingService.Actors
                         return;
                     }
 
-                    Persist(new OrderCanceled(Order.Id), _ =>
+                    Persist(new OrderCanceled(), _ =>
                     {
-                        Order = null;
-                        Sender.Tell(new OrderSuccess(Order.Id));
+                        Sender.Tell(new OrderSuccess());
+                        //Order = null;
                     });
                     break;
             }
@@ -54,7 +53,7 @@ namespace OrderingService.Actors
                     Order = orderCreated.Order;
                     break;
                 case OrderCanceled orderCancelled:
-                    Order = null;
+                    //Order = null;
                     break;
             }
         }

@@ -1,7 +1,5 @@
-﻿using CartCoordinatorService;
-using CartService;
+﻿using CartService;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CartAPI.Controllers
@@ -11,12 +9,10 @@ namespace CartAPI.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartService CartService;
-        private readonly ICartCoordinatorService CartCoordinatorService;
 
-        public CartController(ICartService cartService, ICartCoordinatorService cartCoordinatorService)
+        public CartController(ICartService cartService)
         {
             CartService = cartService;
-            CartCoordinatorService = cartCoordinatorService;
         }
 
         [HttpGet("{cartId}")]
@@ -33,14 +29,15 @@ namespace CartAPI.Controllers
         [HttpPost("{cartId}/add")]
         public async Task<ActionResult> AddItemToCart(int cartId, [FromBody] AddToCartMessage message)
         {
-            await CartCoordinatorService.AddToCart(message.ProductId, message.Quantity, cartId);
+
+            await CartService.AddToCart(message.ProductId, message.Quantity, message.Price, cartId);
             return Ok();
         }
 
         [HttpPost("{cartId}/items/{itemId}")]
         public async Task<IActionResult> RemoveItemFromCart(int cartId, int itemId, int quantity)
         {
-            await CartCoordinatorService.RemoveFromCart(cartId, itemId, quantity);
+            await CartService.RemoveFromCart(cartId, itemId, quantity);
             return Ok();
         }
     }

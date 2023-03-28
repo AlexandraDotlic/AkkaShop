@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CartService
+namespace CartCoordinatorService
 {
-    public interface ICartService
+    public interface ICoordinatorService
     {
-        Task<Cart> GetCart(int cartId);
-        Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price, int? cartId = null);
+        Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price, int? cartId=null);
         Task<CartUpdateResult> RemoveFromCart(int cartId, int productId, int quantity);
-
+        Task<OrderCreateResult> CreateOrder(int cartId);
     }
 }

@@ -9,12 +9,12 @@ namespace Messages.Commands
 {
     public class CreateOrder
     {
-        public CreateOrder(Order order)
+        public CreateOrder(Cart cart)
         {
-            Order = order;
+            Cart = cart;
         }
 
-        public Order Order { get; }
+        public Cart Cart { get; }
        
     }
 }

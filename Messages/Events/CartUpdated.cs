@@ -8,15 +8,17 @@ namespace Messages.Events
 {
     public class CartUpdated
     {
-        public CartUpdated(int productId, int quantity)
+        public CartUpdated(int productId, int quantity, decimal? price = null)
         {
             ProductId = productId;
             Quantity = quantity;
+            Price = price;
         }
 
         public int ProductId { get; }
         public int Quantity { get; }
-       
+        public decimal? Price { get; set; }
+
     }
 
 }

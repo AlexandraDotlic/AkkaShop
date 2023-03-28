@@ -10,15 +10,15 @@ namespace Domain.Entities
     {
         public Cart()
         {
-            Id = 1;
+            var r = new Random();
+            Id = r.Next();
         }
         public int Id { get; private set; }
-        //public decimal Total { get; private set; }
         private readonly List<CartItem> _cartItem = new List<CartItem>();
 
         public IReadOnlyCollection<CartItem> CartItems => _cartItem.AsReadOnly();
 
-        public bool UpdateCart(int productId, int quantity)
+        public bool UpdateCart(int productId, int quantity, decimal? price = null)
         {
             var existigItem = _cartItem.FirstOrDefault(i => i.ProductId == productId);
             if(existigItem != null)
@@ -32,14 +32,29 @@ namespace Domain.Entities
             }
             else
             {
-                if(quantity > 0)
+                if(quantity > 0 && price != null)
                 {
-                    _cartItem.Add(new CartItem(productId, quantity));
+                    _cartItem.Add(new CartItem(productId, quantity, price.Value));
                     return true;
                 }
             }
             return false;
         }
-   
+
+        public decimal CalculateTotalCost()
+        {
+            decimal totalCost = 0;
+            foreach (var item in CartItems)
+            {
+                totalCost += item.Quantity * item.Price;
+            }
+            return totalCost;
+        }
+
+        public Cart(int id, List<CartItem> cartItem)
+        {
+            Id = id;
+            _cartItem = cartItem;
+        }
     }
 }

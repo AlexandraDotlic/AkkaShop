@@ -1,28 +1,23 @@
 ﻿using Akka.Actor;
-using CartService.Actors;
+using Akka.Util;
+using CartService;
 using Domain.Entities;
 using Messages.Commands;
 using Messages.Events;
-using Newtonsoft.Json;
 
-namespace CartService
+namespace CartCoordinatorService
 {
-    public class CartSvc: ICartService
+    public class CoordinatorSvc : ICoordinatorService
     {
-        private readonly IActorRef CartActor;
         private readonly IActorRef CartCoordinatorActor;
+        private readonly ICartService CartService;
+        private readonly IActorRef OrderingCoordinatorActor;
 
-        public CartSvc(IActorRef cartActor, IActorRef cartCoordinatorActor)
+        public CoordinatorSvc(IActorRef cartCoordinatorActor, ICartService cartService, IActorRef orderingCoordinatorActor)
         {
-            CartActor = cartActor;
             CartCoordinatorActor = cartCoordinatorActor;
-        }
-
-        //nisam sigurna kako po Id-ju da vratim i da li mi to treba ovde
-        public async Task<Cart> GetCart(int cartId)
-        {
-            var result = await CartActor.Ask(new GetCart());
-            return (Cart)result;
+            CartService = cartService;
+            OrderingCoordinatorActor = orderingCoordinatorActor;
         }
 
         public async Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price, int? cartId = null)
@@ -43,12 +38,26 @@ namespace CartService
             var response = await CartCoordinatorActor.Ask(new RemoveFromCart(cartId, productId, quantity));
             if (response is CartUpdateSuccess)
                 return new CartUpdateResult { Success = true };
-            else if (response is CartUpdateFailed)
+            else if(response is CartUpdateFailed)
                 return new CartUpdateResult { Success = false, ErrorMessage = ((CartUpdateFailed)response).ErrorMessage };
             else
                 return new CartUpdateResult { Success = false, ErrorMessage = "Remove from Cart failed" };
         }
 
-    }
+        public async Task CancelOrder(Guid orderId)
+        {
+            OrderingCoordinatorActor.Tell(new CancelOrder(orderId));
+        }
 
+        public async Task<OrderCreateResult> CreateOrder(int cartId)
+        {
+            var cart = await CartService.GetCart(cartId);
+            var response = await OrderingCoordinatorActor.Ask(new CreateOrder(cart));
+            if (response is CreateOrderFailed)
+                return new OrderCreateResult { Success = false, Message = "failed to create order" };
+
+            return new OrderCreateResult { Success = true, OrderId = ((OrderSuccess)response).OrderId.ToString()};
+
+        }
+    }
 }

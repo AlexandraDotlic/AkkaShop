@@ -1,14 +1,10 @@
 
 using Akka.Actor;
-using Akka.Configuration;
-using CartService.Actors;
-using System.Diagnostics.Metrics;
-using System.Net;
 using Akka.Cluster;
-using CartCoordinatorService.Actors;
 using Akka.Cluster.Tools.PublishSubscribe;
+using Akka.Configuration;
 using CartService;
-using CartCoordinatorService;
+using CartService.Actors;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = ConfigurationFactory.ParseString(File.ReadAllText("akka.conf"));
@@ -24,15 +20,16 @@ var cartActorRef = system.ActorOf(Props.Create(() => new CartActor()), "cartActo
 //ActorSelection to locate the actor running on another node in the cluster
 var productCatalogActorSelection = system.ActorSelection("akka.tcp://ProductCatalogAPI@127.0.0.1:8082/user/productCatalogActor");
 var productCatalogActorRef = await productCatalogActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
+
 var cartCoordinatorActorRef = system.ActorOf(Props.Create(() => new CartCoordinatorActor(cartActorRef, productCatalogActorRef)), "cartCoordinatorActor");
+
 //ovo isto ne znam da li treba?
 mediator.Tell(new Put(cartCoordinatorActorRef));
 
 
-var cartSvc = new CartSvc(cartActorRef);
+var cartSvc = new CartSvc(cartActorRef, cartCoordinatorActorRef);
 builder.Services.AddSingleton<ICartService>(cartSvc);
-var cartCoordinatorSvc = new CartCoordinatorSvc(cartCoordinatorActorRef);
-builder.Services.AddSingleton<ICartCoordinatorService>(cartCoordinatorSvc);
+
 
 // Add services to the container.
 

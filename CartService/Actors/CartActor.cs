@@ -20,25 +20,29 @@ namespace CartService.Actors
     public class CartActor : UntypedPersistentActor
     {
         public override string PersistenceId => nameof(CartActor);
-        private Cart Cart = new Cart();
+        private Cart Cart;
 
         protected override void OnCommand(object message)
         {
             switch (message)
             {
                 //todo: getCart
-                case GetCart getCart:                   
-                        var cart = Cart;
-                        Sender.Tell(cart);
-                        break;                                       
-                case AddToCart addToCart:
-                    Persist(new CartUpdated(addToCart.ProductId, addToCart.Quantity), _ =>
-                    {
-                        if(addToCart.CartId == null)
+                case GetCart getCart:
+                        if(Cart == null)
                         {
                             Cart = new Cart();
                         }
-                        Cart.UpdateCart(addToCart.ProductId, addToCart.Quantity);
+                        
+                        Sender.Tell(Cart);
+                        break;                                       
+                case AddToCart addToCart:
+                    Persist(new CartUpdated(addToCart.ProductId, addToCart.Quantity, addToCart.Price), _ =>
+                    {
+                        if(Cart == null)
+                        {
+                            Cart = new Cart();
+                        }
+                        Cart.UpdateCart(addToCart.ProductId, addToCart.Quantity, addToCart.Price);
                         Sender.Tell(new CartUpdateSuccess());
                     });
                     break;
@@ -57,7 +61,7 @@ namespace CartService.Actors
             switch (message)
             {
                 case CartUpdated cartUpdated:
-                    Cart.UpdateCart(cartUpdated.ProductId, cartUpdated.Quantity);
+                    Cart.UpdateCart(cartUpdated.ProductId, cartUpdated.Quantity, cartUpdated.Price);
                     break;
             }
         }

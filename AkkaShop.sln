@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderingService", "Ordering
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductCatalogService", "ProductCatalogService\ProductCatalogService.csproj", "{E256D67E-4C43-4E71-8DCB-BDEDEDFD78CA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartCoordinatorService", "CartCoordinatorService\CartCoordinatorService.csproj", "{D62EBD90-743A-42E9-BEEC-2A9CE18F3C58}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "Messages\Messages.csproj", "{536F1CA7-C1A7-47FD-A265-0685212449FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{62D1A26E-FFCA-494F-AED9-50B372376970}"
@@ -23,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E4D4C8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartAPI", "CartAPI\CartAPI.csproj", "{916EB7BE-B322-463E-A14B-3A912A016481}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalStore", "LocalStore\LocalStore.csproj", "{02975858-1AE1-4387-9163-EF6FA7F5CCFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalStore", "LocalStore\LocalStore.csproj", "{02975858-1AE1-4387-9163-EF6FA7F5CCFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{E256D67E-4C43-4E71-8DCB-BDEDEDFD78CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E256D67E-4C43-4E71-8DCB-BDEDEDFD78CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E256D67E-4C43-4E71-8DCB-BDEDEDFD78CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D62EBD90-743A-42E9-BEEC-2A9CE18F3C58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D62EBD90-743A-42E9-BEEC-2A9CE18F3C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D62EBD90-743A-42E9-BEEC-2A9CE18F3C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D62EBD90-743A-42E9-BEEC-2A9CE18F3C58}.Release|Any CPU.Build.0 = Release|Any CPU
 		{536F1CA7-C1A7-47FD-A265-0685212449FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{536F1CA7-C1A7-47FD-A265-0685212449FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{536F1CA7-C1A7-47FD-A265-0685212449FF}.Release|Any CPU.ActiveCfg = Release|Any CPU

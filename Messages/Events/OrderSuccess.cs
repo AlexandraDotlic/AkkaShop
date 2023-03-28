@@ -8,13 +8,10 @@ namespace Messages.Events
 {
     public class OrderSuccess
     {
-        private Guid Id;
 
-        public OrderSuccess(Guid id)
+        public OrderSuccess()
         {
-            Id = id;
         }
 
-        public Guid OrderId { get; set; }
     }
 }

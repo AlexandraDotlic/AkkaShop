@@ -13,10 +13,13 @@ namespace OrderingService
     public class OrderingSvc : IOrderingService
     {
         private readonly IActorRef OrderingActor;
+        private readonly IActorRef OrderingCoordinatorActor;
 
-        public OrderingSvc(IActorRef orderingActor)
+
+        public OrderingSvc(IActorRef orderingActor, IActorRef orderingCoordinatorActor)
         {
             OrderingActor = orderingActor;
+            OrderingCoordinatorActor = orderingCoordinatorActor;
         }
 
         public async Task CancelOrder(Guid orderId)
@@ -24,18 +27,14 @@ namespace OrderingService
            OrderingActor.Tell(new CancelOrder(orderId));         
         }
 
-        public async Task<Order> CreateOrder(Cart cart)
-        {
-            Order order = new Order(OrderStatus.Created, cart.Id);
-            var response = await OrderingActor.Ask(new CreateOrder(order));
-            if (response != null)
-            {
-                if (response is OrderCreated)
-                {
-                    return order;
-                }
-            }           
-            return null;
+        public async Task<OrderCreateResult> CreateOrder(Cart cart)
+        {            
+            var response = await OrderingCoordinatorActor.Ask(new CreateOrder(cart));
+            if (response is CreateOrderFailed)
+                return new OrderCreateResult { Success = false, Message = "failed to create order" };
+
+            return new OrderCreateResult { Success = true };
+
         }
     }
 }

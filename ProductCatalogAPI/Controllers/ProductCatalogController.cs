@@ -18,7 +18,7 @@ namespace ProductCatalogAPI.Controllers
 
 
         [HttpGet("{productId}")]
-        public async Task<ActionResult> LookupPrduct(int productId)
+        public async Task<ActionResult> LookupProduct(int productId)
         {
             var isFound = await ProductCataloService.LookupProduct(productId); //todo:
             if (isFound == false)

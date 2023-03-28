@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace OrderingService
 {
-    public interface IOrderingService
+    public class OrderCreateResult
     {
-        Task<OrderCreateResult> CreateOrder(Cart cart);
-        Task CancelOrder(Guid orderId);
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string OrderId { get; set; }
     }
 }
