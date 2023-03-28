@@ -8,13 +8,11 @@ namespace Messages.Commands
 {
     public class RemoveFromCart
     {
-        public int CartId { get; set; }
         public int ProductId { get; }
         public int Quantity { get; }
 
-        public RemoveFromCart(int cartId, int productId, int quantity)
+        public RemoveFromCart( int productId, int quantity)
         {
-            CartId = cartId;
             ProductId = productId;
             Quantity = quantity;
         }

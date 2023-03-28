@@ -15,10 +15,10 @@ namespace CartAPI.Controllers
             CartService = cartService;
         }
 
-        [HttpGet("{cartId}")]
-        public async Task<ActionResult<Cart>> GetCart(int cartId)
+        [HttpGet]
+        public async Task<ActionResult<Cart>> GetCart()
         {
-            var cart = await CartService.GetCart(cartId); //todo:
+            var cart = await CartService.GetCart(); //todo:
             if (cart == null)
             {
                 return NotFound();
@@ -26,18 +26,18 @@ namespace CartAPI.Controllers
             return Ok(cart);
         }
 
-        [HttpPost("{cartId}/add")]
-        public async Task<ActionResult> AddItemToCart(int cartId, [FromBody] AddToCartMessage message)
+        [HttpPost]
+        public async Task<ActionResult> AddItemToCart( [FromBody] AddToCartMessage message)
         {
 
-            await CartService.AddToCart(message.ProductId, message.Quantity, message.Price, cartId);
+            await CartService.AddToCart(message.ProductId, message.Quantity, message.Price);
             return Ok();
         }
 
         [HttpPost("{cartId}/items/{itemId}")]
-        public async Task<IActionResult> RemoveItemFromCart(int cartId, int itemId, int quantity)
+        public async Task<IActionResult> RemoveItemFromCart(int itemId, int quantity)
         {
-            await CartService.RemoveFromCart(cartId, itemId, quantity);
+            await CartService.RemoveFromCart(itemId, quantity);
             return Ok();
         }
     }

@@ -9,9 +9,9 @@ namespace CartService
 {
     public interface ICartService
     {
-        Task<Cart> GetCart(int cartId);
-        Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price, int? cartId = null);
-        Task<CartUpdateResult> RemoveFromCart(int cartId, int productId, int quantity);
+        Task<Cart> GetCart();
+        Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price);
+        Task<CartUpdateResult> RemoveFromCart( int productId, int quantity);
 
     }
 }

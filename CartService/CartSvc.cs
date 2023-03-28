@@ -19,16 +19,16 @@ namespace CartService
         }
 
         //nisam sigurna kako po Id-ju da vratim i da li mi to treba ovde
-        public async Task<Cart> GetCart(int cartId)
+        public async Task<Cart> GetCart()
         {
             var result = await CartActor.Ask(new GetCart());
             return (Cart)result;
         }
 
-        public async Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price, int? cartId = null)
+        public async Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price)
         {
 
-            var response = await CartCoordinatorActor.Ask(new AddToCart(cartId, productId, quantity, price));
+            var response = await CartCoordinatorActor.Ask(new AddToCart(productId, quantity, price));
             if (response is CartUpdateSuccess)
                 return new CartUpdateResult { Success = true };
             else if (response is CartUpdateFailed)
@@ -38,9 +38,9 @@ namespace CartService
 
         }
 
-        public async Task<CartUpdateResult> RemoveFromCart(int cartId, int productId, int quantity)
+        public async Task<CartUpdateResult> RemoveFromCart( int productId, int quantity)
         {
-            var response = await CartCoordinatorActor.Ask(new RemoveFromCart(cartId, productId, quantity));
+            var response = await CartCoordinatorActor.Ask(new RemoveFromCart(productId, quantity));
             if (response is CartUpdateSuccess)
                 return new CartUpdateResult { Success = true };
             else if (response is CartUpdateFailed)
