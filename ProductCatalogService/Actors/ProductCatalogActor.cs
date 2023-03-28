@@ -19,6 +19,8 @@ namespace ProductCatalogService.Actors
         public ProductCatalogActor()
         {
             Products = new List<Product>(); //treba populisati ovu listu
+            var p1 = new Product("test", 10, 100); //test
+            Products.Add(p1);
             //todo: get products from somwhere
             Receive<LookupProduct>(lookupProduct =>
             {
@@ -30,6 +32,20 @@ namespace ProductCatalogService.Actors
                 else
                 {
                     Sender.Tell(new ProductNotFound(lookupProduct.ProductId));
+                }
+            });
+
+            Receive<UpdateInventory>(updateInv =>
+            {
+                var product = Products.FirstOrDefault(p => updateInv.ProductId == p.Id);
+                if (product != null)
+                {
+                    product.ChangeQuantity(updateInv.Quantity);
+                    Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Inventory));
+                }
+                else
+                {
+                    Sender.Tell(new ProductNotFound(updateInv.ProductId));
                 }
             });
 

@@ -14,7 +14,7 @@ namespace CartCoordinatorService.Actors
             CartActor = cartActor;
             ProductCatalogActor = productCatalogActor;
 
-            Receive<AddToCart>(async cmd =>
+            ReceiveAsync<AddToCart>(async cmd =>
             {
                 try
                 {
@@ -22,7 +22,8 @@ namespace CartCoordinatorService.Actors
 
                     if (inventoryStatus.AvailableQuantity >= cmd.Quantity)
                     {
-                        cartActor.Tell(cmd);
+                        CartActor.Tell(cmd);
+                        ProductCatalogActor.Tell(new UpdateInventory(cmd.ProductId, -cmd.Quantity));
                         Sender.Tell(new CartUpdateSuccess());
                     }
                     else
@@ -38,7 +39,8 @@ namespace CartCoordinatorService.Actors
 
             Receive<RemoveFromCart>(cmd =>
             {
-                cartActor.Tell(cmd);
+                CartActor.Tell(cmd);
+                ProductCatalogActor.Tell(new UpdateInventory(cmd.ProductId, cmd.Quantity));
                 Sender.Tell(new CartUpdateSuccess());
             });
         }

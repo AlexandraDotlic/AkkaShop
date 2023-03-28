@@ -13,10 +13,9 @@ namespace CartAPI.Controllers
         private readonly ICartService CartService;
         private readonly ICartCoordinatorService CartCoordinatorService;
 
-        public CartController(ICartService cartService, ICartCoordinatorService cartCoordinatorService)
+        public CartController(ICartService cartService)
         {
             CartService = cartService;
-            CartCoordinatorService = cartCoordinatorService;
         }
 
         [HttpGet("{cartId}")]
@@ -33,7 +32,7 @@ namespace CartAPI.Controllers
         [HttpPost("{cartId}/add")]
         public async Task<ActionResult> AddItemToCart(int cartId, [FromBody] AddToCartMessage message)
         {
-            await CartCoordinatorService.AddToCart(message.ProductId, message.Quantity, cartId);
+            await CartCoordinatorService.AddToCart(cartId, message.ProductId, message.Quantity);
             return Ok();
         }
 

@@ -10,6 +10,7 @@ namespace Domain.Entities
     {
         public Cart()
         {
+            Id = 1;
         }
         public int Id { get; private set; }
         //public decimal Total { get; private set; }
@@ -22,7 +23,7 @@ namespace Domain.Entities
             var existigItem = _cartItem.FirstOrDefault(i => i.ProductId == productId);
             if(existigItem != null)
             {
-                existigItem.IncreaseQuantity(quantity);
+                existigItem.UpdateQuantity(quantity);
                 if(existigItem.Quantity == 0)
                 {
                     _cartItem.Remove(existigItem);

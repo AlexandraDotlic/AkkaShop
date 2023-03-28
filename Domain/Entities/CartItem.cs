@@ -18,22 +18,22 @@ namespace Domain.Entities
             Quantity = quantity;
         }
 
-        public int Id { get; private set; }
-
         public int ProductId { get; private set; }
 
         public int Quantity { get; private set; }
 
-        internal void IncreaseQuantity(int quantity = 1)
+        internal void UpdateQuantity(int quantity = 1)
         {
-            Quantity += quantity;
-        }
-        public void DecreaseQuantity()
-        {
-            if (Quantity > 0)
+            if((Quantity + quantity) >= 0)
             {
-                Quantity -= 1;
+                Quantity += quantity;
             }
+            else
+            {
+                throw new Exception("To many items");
+            }
+            
         }
+    
     }
 }

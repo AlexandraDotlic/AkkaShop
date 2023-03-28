@@ -14,6 +14,7 @@ namespace Domain.Entities
         }
         public Product(string title, decimal price, int inventory)
         {
+            Id = 1;
             Title = title;
             Price = price;
             Inventory = inventory;
