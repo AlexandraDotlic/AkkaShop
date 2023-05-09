@@ -1,4 +1,5 @@
-﻿using Messages.Events;
+﻿using Domain.Entities;
+using Messages.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,8 @@ namespace ProductCatalogService
     {
         Task<bool> LookupProduct(int productId);
         Task<InventoryStatus> UpdateInventory(int productId, int quantity);
+        Task<List<Product>> GetAllProducts();
+        Task<InventoryStatus> AddProduct(Product product);
+
     }
 }

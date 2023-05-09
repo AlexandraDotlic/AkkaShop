@@ -12,18 +12,18 @@ namespace Domain.Entities
         {
 
         }
-        public Product(string title, decimal price, int inventory)
-        {
-            Id = 1;
+        public Product(int id, string title, decimal price, int inventory = 1)
+        {  
+            Id = id;
             Title = title;
             Price = price;
-            Inventory = inventory;
+            Quantity = inventory;
         }
 
         public int Id { get; private set; }
         public string Title { get; private set; }
         public decimal Price { get; private set; }
-        public int Inventory { get; private set; }
+        public int Quantity { get; private set; }
 
         /// <summary>
         /// update the inventory levels of the product, based on the quantity being added or removed from the inventory.
@@ -31,8 +31,8 @@ namespace Domain.Entities
         /// <param name="quantity"></param>
         public void ChangeQuantity(int quantity)
         {
-            if (Inventory + quantity >= 0)
-                Inventory += quantity;
+            if (Quantity + quantity >= 0)
+                Quantity += quantity;
         }
         /// <summary>
         /// Update the price of the product
@@ -48,7 +48,7 @@ namespace Domain.Entities
         /// <returns></returns>
         public bool CheckAvailability()
         {
-            return Inventory > 0;
+            return Quantity > 0;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Messages.Events
 
         public InventoryStatus(int productId, int availableQuantity)
         {
-            ProductId = ProductId;
+            ProductId = productId;
             AvailableQuantity = availableQuantity;
         }
     }

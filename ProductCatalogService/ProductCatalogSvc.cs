@@ -19,6 +19,22 @@ namespace ProductCatalogService
             ProductCatalogActor = productCatalogActor;
         }
 
+        public async Task<InventoryStatus> AddProduct(Product product)
+        {
+            var result = await ProductCatalogActor.Ask(new AddProduct(product));
+            return (InventoryStatus)result;
+        }
+
+        public async Task<List<Product>> GetAllProducts()
+        {
+            var result = await ProductCatalogActor.Ask<GetAllProducts>(new GetAllProducts());
+            if (result != null)
+                return result.ProductList;
+            else
+                return null;
+
+        }
+
         public async Task<bool> LookupProduct(int productId)
         {
             var result = await ProductCatalogActor.Ask(new LookupProduct(productId));
