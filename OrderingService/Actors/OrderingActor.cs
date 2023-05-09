@@ -8,7 +8,7 @@ namespace OrderingService.Actors
 {
     public class OrderingActor : UntypedPersistentActor
     {
-        public override string PersistenceId => "order";
+        public override string PersistenceId => nameof(OrderingActor);
 
         private Order Order;
 
@@ -38,7 +38,7 @@ namespace OrderingService.Actors
                     Persist(new OrderCanceled(), _ =>
                     {
                         Sender.Tell(new OrderSuccess());
-                        //Order = null;
+                        Order = null;
                     });
                     break;
             }
@@ -53,7 +53,7 @@ namespace OrderingService.Actors
                     Order = orderCreated.Order;
                     break;
                 case OrderCanceled orderCancelled:
-                    //Order = null;
+                    Order = null;
                     break;
             }
         }
