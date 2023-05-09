@@ -55,7 +55,19 @@ namespace CartService.Actors
             switch (message)
             {
                 case CartUpdated cartUpdated:
-                    Cart.UpdateCart(cartUpdated.ProductId, cartUpdated.Quantity, cartUpdated.Price);
+                    if (Cart == null)
+                    {
+                        Cart = new Cart();
+                    }
+
+                    if (cartUpdated.Price.HasValue)
+                    {
+                        Cart.UpdateCart(cartUpdated.ProductId, cartUpdated.Quantity, cartUpdated.Price.Value);
+                    }
+                    else
+                    {
+                        Cart.UpdateCart(cartUpdated.ProductId, -cartUpdated.Quantity);
+                    }
                     break;
             }
         }

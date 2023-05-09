@@ -4,13 +4,18 @@
     {
         public Order(OrderStatus status, Cart cart)
         {
+           
+
             Id = Guid.NewGuid().ToString();
             Status = status;
-            TotalCost = cart.CalculateTotalCost();
-            foreach (var item in cart.CartItems)
+            if (cart != null)
             {
-                var orderItem = new OrderItem(item.ProductId, item.Quantity, item.Price);
-                _orderItems.Add(orderItem);
+                TotalCost = cart.CalculateTotalCost();
+                foreach (var item in cart.CartItems)
+                {
+                    var orderItem = new OrderItem(item.ProductId, item.Quantity, item.Price);
+                    _orderItems.Add(orderItem);
+                }
             }
         }
 
