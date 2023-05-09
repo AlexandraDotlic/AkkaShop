@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E4D4C8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartAPI", "CartAPI\CartAPI.csproj", "{916EB7BE-B322-463E-A14B-3A912A016481}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalStore", "LocalStore\LocalStore.csproj", "{02975858-1AE1-4387-9163-EF6FA7F5CCFA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,10 +59,6 @@ Global
 		{916EB7BE-B322-463E-A14B-3A912A016481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{916EB7BE-B322-463E-A14B-3A912A016481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{916EB7BE-B322-463E-A14B-3A912A016481}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02975858-1AE1-4387-9163-EF6FA7F5CCFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02975858-1AE1-4387-9163-EF6FA7F5CCFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02975858-1AE1-4387-9163-EF6FA7F5CCFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02975858-1AE1-4387-9163-EF6FA7F5CCFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,7 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{536F1CA7-C1A7-47FD-A265-0685212449FF} = {E4D4C87D-C19E-4601-88A3-D7DAC7323737}
 		{62D1A26E-FFCA-494F-AED9-50B372376970} = {E4D4C87D-C19E-4601-88A3-D7DAC7323737}
-		{02975858-1AE1-4387-9163-EF6FA7F5CCFA} = {E4D4C87D-C19E-4601-88A3-D7DAC7323737}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA09D705-5120-42C5-84FD-FCA2A1B345E7}
