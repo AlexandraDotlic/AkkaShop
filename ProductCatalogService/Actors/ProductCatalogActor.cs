@@ -3,19 +3,12 @@ using Akka.Persistence;
 using Domain.Entities;
 using Messages.Commands;
 using Messages.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductCatalogService.Actors
 {
     public class ProductCatalogActor : ReceivePersistentActor
     {
-
         private readonly List<Product> Products = new List<Product>();
-
         public ProductCatalogActor()
         {
 
@@ -84,8 +77,6 @@ namespace ProductCatalogService.Actors
                 }
             });
         }
-
-
         public override string PersistenceId => nameof(ProductCatalogActor);
     }
 }

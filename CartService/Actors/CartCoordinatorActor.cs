@@ -8,7 +8,6 @@ namespace CartService.Actors
     {
         private readonly IActorRef CartActor;
         private readonly IActorRef ProductCatalogActor;
-
         public CartCoordinatorActor(IActorRef cartActor, IActorRef productCatalogActor)
         {
             CartActor = cartActor;
@@ -43,10 +42,6 @@ namespace CartService.Actors
                 ProductCatalogActor.Tell(new UpdateInventory(cmd.ProductId, cmd.Quantity));
                 Sender.Tell(new CartUpdateSuccess());
             });
-
-
-
-
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Domain.Entities;
-using Messages.Commands;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalogService;
 
@@ -16,8 +14,6 @@ namespace ProductCatalogAPI.Controllers
         {
             ProductCataloService = productCataloService;
         }
-
-
         [HttpGet("{productId}")]
         public async Task<ActionResult> LookupProduct(int productId)
         {
@@ -49,7 +45,6 @@ namespace ProductCatalogAPI.Controllers
                 products.Add(productDTO);
             }
             return Ok(products);
-
         }
 
         [HttpPost]
@@ -59,6 +54,5 @@ namespace ProductCatalogAPI.Controllers
             var result = await ProductCataloService.AddProduct(product);
             return Ok(result.ProductId);
         }
-
     }
 }

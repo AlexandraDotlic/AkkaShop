@@ -26,6 +26,5 @@ namespace OrderingAPI.Controllers
             var result = await OrderingService.CreateOrder(c);
             return Ok(result);
         }
-
     }
 }

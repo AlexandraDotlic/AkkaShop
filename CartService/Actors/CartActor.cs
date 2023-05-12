@@ -20,13 +20,11 @@ namespace CartService.Actors
         {
             switch (message)
             {
-                //todo: getCart
                 case GetCart getCart:
                         if(Cart == null)
                         {
                             Cart = new Cart();
-                        }
-                        
+                        }                       
                         Sender.Tell(Cart);
                         break;                                       
                 case AddToCart addToCart:
@@ -49,7 +47,6 @@ namespace CartService.Actors
                     break;
             }
         }
-
         protected override void OnRecover(object message)
         {
             switch (message)
@@ -71,8 +68,6 @@ namespace CartService.Actors
                     break;
             }
         }
-
-
     }
 }
 

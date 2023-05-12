@@ -1,11 +1,7 @@
 ﻿using Akka.Actor;
 using Messages.Commands;
 using Messages.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace OrderingService.Actors
 {
@@ -19,6 +15,7 @@ namespace OrderingService.Actors
             ProductCatalogActor = productCatalogActor;
             OrderingActor = orderingActor;
 
+            
             ReceiveAsync<CreateOrder>(async cmd =>
             {
                 
@@ -41,12 +38,10 @@ namespace OrderingService.Actors
 
             });
             ReceiveAsync<CancelOrder>(async cmd =>
-            { //todo:
+            { 
                 Sender.Tell(cmd);
 
-
             });
-
 
         }
     }

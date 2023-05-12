@@ -34,11 +34,10 @@ namespace OrderingService.Actors
                         Sender.Tell(new OrderFailed("There is no order to cancel."));
                         return;
                     }
-
+                    Order.CancelOrder();
                     Persist(new OrderCanceled(), _ =>
                     {
                         Sender.Tell(new OrderSuccess());
-                        Order = null;
                     });
                     break;
             }
@@ -53,7 +52,7 @@ namespace OrderingService.Actors
                     Order = orderCreated.Order;
                     break;
                 case OrderCanceled orderCancelled:
-                    Order = null;
+                    Order.CancelOrder();
                     break;
             }
         }

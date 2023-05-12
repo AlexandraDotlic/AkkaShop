@@ -5,7 +5,6 @@
         public Order(OrderStatus status, Cart cart)
         {
            
-
             Id = Guid.NewGuid().ToString();
             Status = status;
             if (cart != null)
@@ -18,7 +17,6 @@
                 }
             }
         }
-
         public string Id { get; private set; } 
         public decimal TotalCost { get; private set; }
         public OrderStatus Status { get; private set; }
