@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
-using Messages.Commands;
-using Messages.Events;
-
+using OrderingService.Messages.Commands;
+using OrderingService.Messages.Events;
 
 namespace OrderingService.Actors
 {
