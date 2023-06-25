@@ -1,7 +1,9 @@
 ﻿using Akka.Actor;
-using CartService.Messages.Commands;
-using CartService.Messages.Events;
+using CartService.Actors;
 using Domain.Entities;
+using Messages.Commands;
+using Messages.Events;
+using Newtonsoft.Json;
 
 namespace CartService
 {

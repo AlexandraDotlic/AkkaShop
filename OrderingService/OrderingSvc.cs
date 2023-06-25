@@ -1,7 +1,12 @@
 ﻿using Akka.Actor;
 using Domain.Entities;
-using OrderingService.Messages.Commands;
-using OrderingService.Messages.Events;
+using Messages.Commands;
+using Messages.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OrderingService
 {

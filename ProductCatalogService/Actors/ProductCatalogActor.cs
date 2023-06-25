@@ -1,8 +1,8 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Domain.Entities;
-using ProductCatalogService.Messages.Commands;
-using ProductCatalogService.Messages.Events;
+using Messages.Commands;
+using Messages.Events;
 
 namespace ProductCatalogService.Actors
 {

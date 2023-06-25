@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
-using CartService.Messages.Commands;
-using CartService.Messages.Events;
+using Messages.Commands;
+using Messages.Events;
 
 namespace CartService.Actors
 {

@@ -1,8 +1,13 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
-using CartService.Messages.Commands;
-using CartService.Messages.Events;
+using Messages.Events;
 using Domain.Entities;
+using Messages.Commands;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CartService.Actors
 {

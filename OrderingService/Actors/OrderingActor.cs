@@ -1,8 +1,8 @@
 ﻿using Akka.Actor;
 using Akka.Persistence;
 using Domain.Entities;
-using OrderingService.Messages.Commands;
-using OrderingService.Messages.Events;
+using Messages.Commands;
+using Messages.Events;
 
 namespace OrderingService.Actors
 {
