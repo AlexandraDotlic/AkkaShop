@@ -9,38 +9,62 @@ namespace OrderingService.Actors
     {
         private readonly IActorRef ProductCatalogActor;
         private readonly IActorRef OrderingActor;
+        private readonly IActorRef CartCoordinatorActor;
 
-        public OrderingCoordinatorActor( IActorRef productCatalogActor, IActorRef orderingActor)
+        public OrderingCoordinatorActor(IActorRef productCatalogActor, IActorRef orderingActor, IActorRef cartCoordinatorActor)
         {
             ProductCatalogActor = productCatalogActor;
             OrderingActor = orderingActor;
+            CartCoordinatorActor = cartCoordinatorActor;
 
-            
             ReceiveAsync<CreateOrder>(async cmd =>
             {
-                
-                int errorCount = 0;
+                var reservedCount = 0;
                 foreach (var item in cmd.Cart.CartItems)
                 {
-                    var inventoryStatus = await ProductCatalogActor.Ask<InventoryStatus>(new LookupProduct(item.ProductId));
-                    if (inventoryStatus.AvailableQuantity < item.Quantity)
-                    {
-                        errorCount++;
-                    }
+                    var reserveProductResult = await ProductCatalogActor.Ask<ReserveProductResult>(new ReserveProduct(item.ProductId, item.Quantity));
+
+                    if (reserveProductResult is ReserveProductSuccess)                   
+                        reservedCount++;                    
                 }
-                if (errorCount > 0)
-                    Sender.Tell(new CreateOrderFailed());
+
+                if (reservedCount == cmd.Cart.CartItems.Count)
+                {
+                    await OrderingActor.Ask<OrderResult>(cmd).PipeTo(Self, Sender);                    
+                }
                 else
                 {
-                    OrderingActor.Tell(cmd);
-                    Sender.Tell(new OrderSuccess());
+                    foreach (var item in cmd.Cart.CartItems)
+                    {
+                        ProductCatalogActor.Tell(new ReleaseProductReservation(item.ProductId, item.Quantity));
+                    }
+                    CartCoordinatorActor.Tell(new ClearCart());
+                    Sender.Tell(new OrderFailed("Not all products could be reserved."));
                 }
+            });
 
+            ReceiveAsync<OrderSuccess>(async orderSuccess =>
+            {
+                Sender.Tell(new OrderSuccess());
+                CartCoordinatorActor.Tell(new ClearCart());
+            });
+            ReceiveAsync<OrderFailed>(async orderFailed =>
+            {
+                CartCoordinatorActor.Tell(new ClearCart());
+                Sender.Tell(new OrderFailed(orderFailed.Message));
+            });
+            ReceiveAsync<OrderCanceled>(async orderCancelled =>
+            {
+                Sender.Tell(new OrderCanceled());
+                CartCoordinatorActor.Tell(new ClearCart());
             });
             ReceiveAsync<CancelOrder>(async cmd =>
-            { 
-                Sender.Tell(cmd);
+            {
+                var releaseTasks = cmd.Order.OrderItems.Select(item =>
+                    ProductCatalogActor.Ask<ReleaseProductReservation>(new ReleaseProductReservation(item.ProductId, item.Quantity))).ToList();
+                await Task.WhenAll(releaseTasks);
 
+                await OrderingActor.Ask<OrderResult>(cmd).PipeTo(Self, Sender);
             });
 
         }

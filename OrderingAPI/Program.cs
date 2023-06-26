@@ -20,11 +20,17 @@ var orderingActorRef = system.ActorOf(Props.Create(() => new OrderingActor()), "
 //Get productCatalogActor
 var productCatalogActorSelection = system.ActorSelection("akka.tcp://ProductCatalogAPI@127.0.0.1:8082/user/productCatalogActor");
 var productCatalogActorRef = await productCatalogActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
-//Create orderingCoordinatorActor
-var orderingCoordinatorActorRef = system.ActorOf(Props.Create(() => new OrderingCoordinatorActor(productCatalogActorRef, orderingActorRef)), "orderingCoordinatorActor");
+
 //Get CartActor
 var cartActorSelection = system.ActorSelection("akka.tcp://CartAPI@127.0.0.1:8081/user/cartActor");
 var cartActorRef = await cartActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
+
+var cartCoordinatorActorSelection = system.ActorSelection("akka.tcp://CartAPI@127.0.0.1:8081/user/cartCoordinatorActor");
+var cartCoordinatorActorRef = await cartActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
+
+//Create orderingCoordinatorActor
+var orderingCoordinatorActorRef = system.ActorOf(Props.Create(() => new OrderingCoordinatorActor(productCatalogActorRef, orderingActorRef, cartCoordinatorActorRef)), "orderingCoordinatorActor");
+
 
 mediator.Tell(new Put(orderingCoordinatorActorRef));
 var orderingSvc = new OrderingSvc(orderingActorRef, orderingCoordinatorActorRef);

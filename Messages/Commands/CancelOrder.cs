@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,11 @@ namespace Messages.Commands
 {
     public class CancelOrder
     {
-        public CancelOrder(Guid orderId)
+        public CancelOrder(Order order)
         {
-            OrderId = orderId;
+            Order = order;
         }
 
-        public Guid OrderId { get; private set; }
+        public Order Order { get; set; }
     }
 }

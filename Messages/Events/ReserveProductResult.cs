@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Messages.Events
 {
-    public class OrderCanceled : OrderResult
+    public class ReserveProductResult
     {
-        public OrderCanceled()
-        {
-        }
 
     }
 }

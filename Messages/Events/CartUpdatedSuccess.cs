@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Messages.Events
 {
-    public class CartUpdateSuccess
+    public class CartUpdateSuccess : CartUpdateResult
     {
     }
 }

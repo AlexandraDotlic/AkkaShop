@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Messages.Events
 {
-    public class OrderFailed
+    public class OrderFailed : OrderResult
     {
+        public string Message { get; set; }
+        public OrderFailed()
+        {
+
+        }
         public OrderFailed(string message)
         {
-            Message = message;
+            Message= message;
         }
-
-        public string Message { get; set; }
     }
 }

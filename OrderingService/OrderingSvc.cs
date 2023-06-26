@@ -22,15 +22,15 @@ namespace OrderingService
             OrderingCoordinatorActor = orderingCoordinatorActor;
         }
 
-        public async Task CancelOrder(Guid orderId)
+        public async Task CancelOrder(Order order)
         {
-           OrderingActor.Tell(new CancelOrder(orderId));         
+           OrderingActor.Tell(new CancelOrder(order));         
         }
 
         public async Task<OrderCreateResult> CreateOrder(Cart cart)
         {            
             var response = await OrderingCoordinatorActor.Ask(new CreateOrder(cart));
-            if (response is CreateOrderFailed)
+            if (response is OrderFailed)
                 return new OrderCreateResult { Success = false, Message = "failed to create order" };
 
             return new OrderCreateResult { Success = true };

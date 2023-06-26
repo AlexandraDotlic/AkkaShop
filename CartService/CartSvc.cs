@@ -25,28 +25,28 @@ namespace CartService
             return (Cart)result;
         }
 
-        public async Task<CartUpdateResult> AddToCart(int productId, int quantity, decimal price)
+        public async Task<ResultCartUpdate> AddToCart(int productId, int quantity, decimal price)
         {
 
             var response = await CartCoordinatorActor.Ask(new AddToCart(productId, quantity, price));
             if (response is CartUpdateSuccess)
-                return new CartUpdateResult { Success = true };
+                return new ResultCartUpdate { Success = true };
             else if (response is CartUpdateFailed)
-                return new CartUpdateResult { Success = false, ErrorMessage = ((CartUpdateFailed)response).ErrorMessage };
+                return new ResultCartUpdate { Success = false, ErrorMessage = ((CartUpdateFailed)response).ErrorMessage };
             else
-                return new CartUpdateResult { Success = false, ErrorMessage = "Add to Cart failed" };
+                return new ResultCartUpdate { Success = false, ErrorMessage = "Add to Cart failed" };
 
         }
 
-        public async Task<CartUpdateResult> RemoveFromCart( int productId, int quantity)
+        public async Task<ResultCartUpdate> RemoveFromCart( int productId, int quantity)
         {
             var response = await CartCoordinatorActor.Ask(new RemoveFromCart(productId, quantity));
             if (response is CartUpdateSuccess)
-                return new CartUpdateResult { Success = true };
+                return new ResultCartUpdate { Success = true };
             else if (response is CartUpdateFailed)
-                return new CartUpdateResult { Success = false, ErrorMessage = ((CartUpdateFailed)response).ErrorMessage };
+                return new ResultCartUpdate { Success = false, ErrorMessage = ((CartUpdateFailed)response).ErrorMessage };
             else
-                return new CartUpdateResult { Success = false, ErrorMessage = "Remove from Cart failed" };
+                return new ResultCartUpdate { Success = false, ErrorMessage = "Remove from Cart failed" };
         }
 
     }

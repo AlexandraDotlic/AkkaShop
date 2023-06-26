@@ -20,10 +20,8 @@ namespace CartService.Actors
                     var inventoryStatus = await productCatalogActor.Ask<InventoryStatus>(new LookupProduct(cmd.ProductId));
 
                     if (inventoryStatus.AvailableQuantity >= cmd.Quantity)
-                    {
-                        CartActor.Tell(cmd);
-                        ProductCatalogActor.Tell(new UpdateInventory(cmd.ProductId, -cmd.Quantity));
-                        Sender.Tell(new CartUpdateSuccess());
+                    {                       
+                        await CartActor.Ask<CartUpdateResult>(cmd).PipeTo(Self, Sender);
                     }
                     else
                     {
@@ -36,11 +34,23 @@ namespace CartService.Actors
                 }
             });
 
-            Receive<RemoveFromCart>(cmd =>
+            ReceiveAsync<RemoveFromCart>(async cmd =>
+            {              
+                await CartActor.Ask<CartUpdateResult>(cmd).PipeTo(Self, Sender);
+            });
+
+            Receive<CartUpdateSuccess>(cartUpdateSuccess =>
             {
-                CartActor.Tell(cmd);
-                ProductCatalogActor.Tell(new UpdateInventory(cmd.ProductId, cmd.Quantity));
                 Sender.Tell(new CartUpdateSuccess());
+            });
+
+            Receive<CartUpdateFailed>(cartUpdateFailed =>
+            {
+                Sender.Tell(new CartUpdateFailed(cartUpdateFailed.ErrorMessage));
+            });
+            Receive<ClearCart>(clearCart =>
+            {
+                CartActor.Tell(new ClearCart());
             });
         }
     }

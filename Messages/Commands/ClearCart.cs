@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Messages.Events
+namespace Messages.Commands
 {
-    public class OrderCanceled : OrderResult
+    public class ClearCart
     {
-        public OrderCanceled()
-        {
-        }
-
     }
 }

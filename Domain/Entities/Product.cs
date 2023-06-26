@@ -18,12 +18,14 @@ namespace Domain.Entities
             Title = title;
             Price = price;
             Quantity = inventory;
+            ReservedQuantity = 0;
         }
 
         public int Id { get; private set; }
         public string Title { get; private set; }
         public decimal Price { get; private set; }
         public int Quantity { get; private set; }
+        public int ReservedQuantity { get; private set; }
 
         /// <summary>
         /// update the inventory levels of the product, based on the quantity being added or removed from the inventory.
@@ -49,6 +51,16 @@ namespace Domain.Entities
         public bool CheckAvailability()
         {
             return Quantity > 0;
+        }
+
+        public void IncreaseReservedQuantity(int quantity)
+        {
+           ReservedQuantity+= quantity;
+        }
+
+        public void DecreaseReservedQuantity(int quantity)
+        {
+            ReservedQuantity -= quantity;
         }
     }
 }

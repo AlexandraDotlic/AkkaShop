@@ -8,73 +8,117 @@ namespace ProductCatalogService.Actors
 {
     public class ProductCatalogActor : ReceivePersistentActor
     {
-        private readonly List<Product> Products = new List<Product>();
+        private Dictionary<int, Product> Products = new Dictionary<int, Product>();
         public ProductCatalogActor()
         {
-
             Recover<Product>(product =>
+            {                
+                Products[product.Id] = product;
+            });
+            Command<ReserveProduct>(reserveProduct =>
             {
-                Products.Add(product);
+                if (Products.TryGetValue(reserveProduct.ProductId, out var product))
+                {
+                    if (product.Quantity >= reserveProduct.Quantity)
+                    {
+                        product.ChangeQuantity(-reserveProduct.Quantity);
+                        product.IncreaseReservedQuantity(reserveProduct.Quantity);
+                        Sender.Tell(new ReserveProductSuccess(reserveProduct.ProductId, reserveProduct.Quantity));
+                        Persist(product, _ =>
+                        {
+                            Products[reserveProduct.ProductId] = product;
+                        });
+                    }
+                    else
+                    {
+                        Sender.Tell(new ReserveProductFailed(reserveProduct.ProductId, reserveProduct.Quantity));
+                    }
+                }
+                else
+                {
+                    Sender.Tell(new ProductNotFound(reserveProduct.ProductId));
+                }
+            });
+
+            Command<ReleaseProductReservation>(releaseProductReservation =>
+            {
+                if (Products.TryGetValue(releaseProductReservation.ProductId, out var product))
+                {
+                    product.ChangeQuantity(releaseProductReservation.Quantity);
+                    product.DecreaseReservedQuantity(releaseProductReservation.Quantity);
+                    Sender.Tell(new ReleaseProductReservationSuccess(releaseProductReservation.ProductId, releaseProductReservation.Quantity));
+                    Persist(product, _ =>
+                    {
+                        Products[releaseProductReservation.ProductId] = product; 
+                    });
+                }
+                else
+                {
+                    Sender.Tell(new ProductNotFound(releaseProductReservation.ProductId));
+                }
             });
 
             Command<GetAllProducts>(getAllProducts =>
             {
-                Sender.Tell(new GetAllProducts(Products));
+                Sender.Tell(new GetAllProducts(Products.Values.ToList()));
             });
 
             Command<LookupProduct>(lookupProduct =>
             {
-                var product = Products.Find(p => lookupProduct.ProductId == p.Id);
-                if (product.CheckAvailability())
+                if (Products.TryGetValue(lookupProduct.ProductId, out var product))
                 {
-                    Sender.Tell(new InventoryStatus(lookupProduct.ProductId, product.Quantity));
+                    if (product.CheckAvailability())
+                    {
+                        Sender.Tell(new InventoryStatus(lookupProduct.ProductId, product.Quantity));
+                    }
+                    else
+                    {
+                        Sender.Tell(new ProductNotFound(lookupProduct.ProductId));
+                    }
                 }
                 else
                 {
                     Sender.Tell(new ProductNotFound(lookupProduct.ProductId));
-                }
+                }              
             });
 
             Command<UpdateInventory>(updateInv =>
             {
-                var product = Products.FirstOrDefault(p => updateInv.ProductId == p.Id);
-                if (product != null)
+                if (Products.TryGetValue(updateInv.ProductId, out var product))
                 {
                     product.ChangeQuantity(updateInv.Quantity);
                     Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Quantity));
-                    Persist(product, p =>
+                    Persist(product, _ =>
                     {
-                        Products.Remove(product);
-                        Products.Add(p);
+                        Products[updateInv.ProductId] = product;
                     });
                 }
                 else
                 {
                     Sender.Tell(new ProductNotFound(updateInv.ProductId));
-                }
+                }               
             });
 
             Command<AddProduct>(addProduct =>
             {
-                var product = Products.FirstOrDefault(p => addProduct.Product.Id == p.Id);
-                if (product != null)
+                if (Products.TryGetValue(addProduct.Product.Id, out var product))
                 {
                     product.ChangeQuantity(addProduct.Product.Quantity);
                     Sender.Tell(new InventoryStatus(addProduct.Product.Id, product.Quantity));
-                    Persist(product, p =>
+                    Persist(product, _ =>
                     {
-                        Products.Remove(product);
-                        Products.Add(p);
+                        Products[addProduct.Product.Id] = product;
                     });
                 }
                 else
                 {
+                    Products.Add(addProduct.Product.Id, addProduct.Product);
                     Sender.Tell(new InventoryStatus(addProduct.Product.Id, addProduct.Product.Quantity));
-                    Persist(addProduct.Product, product =>
+                    Persist(addProduct, _ =>
                     {
-                        Products.Add(product);
+                        Products[addProduct.Product.Id] = addProduct.Product;
                     });
-                }
+                }               
             });
         }
         public override string PersistenceId => nameof(ProductCatalogActor);

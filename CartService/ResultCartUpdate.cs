@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CartService
 {
-    public class CartUpdateResult
+    public class ResultCartUpdate
     {
         public bool Success { get; set; }
         public string ErrorMessage { get; set; }

@@ -45,6 +45,13 @@ namespace CartService.Actors
                         Sender.Tell(new CartUpdateSuccess());
                     });
                     break;
+                case ClearCart clearCart:
+                    Persist(new CartCleared(), _ =>
+                    {
+                        Cart = null;
+                        Sender.Tell(new CartUpdateSuccess());
+                    });
+                    break;
             }
         }
         protected override void OnRecover(object message)
@@ -65,6 +72,9 @@ namespace CartService.Actors
                     {
                         Cart.UpdateCart(cartUpdated.ProductId, -cartUpdated.Quantity);
                     }
+                    break;
+                case CartCleared _:
+                    Cart = null;
                     break;
             }
         }

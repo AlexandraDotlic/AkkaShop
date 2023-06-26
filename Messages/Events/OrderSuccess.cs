@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Messages.Events
 {
-    public class OrderSuccess
+    public class OrderSuccess : OrderResult
     {
-
         public OrderSuccess()
         {
         }
