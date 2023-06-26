@@ -17,7 +17,7 @@ namespace CartService.Actors
             {
                 try
                 {
-                    var inventoryStatus = await productCatalogActor.Ask<InventoryStatus>(new LookupProduct(cmd.ProductId));
+                    var inventoryStatus = await ProductCatalogActor.Ask<InventoryStatus>(new LookupProduct(cmd.ProductId));
 
                     if (inventoryStatus.AvailableQuantity >= cmd.Quantity)
                     {                       
