@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Messages.Events
 {
-    public enum OrderStatus: byte
+    public class OrderCleared
     {
-        None = 0,
-        Created = 1,
-        Canceled = 2
     }
 }

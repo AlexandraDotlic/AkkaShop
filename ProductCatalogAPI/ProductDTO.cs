@@ -13,5 +13,6 @@ namespace ProductCatalogAPI
         public decimal Price { get; set; }
         [DataMember]
         public int Inventory { get; set; }
+
     }
 }

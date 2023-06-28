@@ -42,6 +42,13 @@ namespace OrderingService.Actors
                         });
                     }                   
                     break;
+                case ClearOrder clearOrder:
+                    Persist(new OrderCleared(), _ =>
+                    {
+                        Order = null;
+                        Sender.Tell(new OrderResult());
+                    });
+                    break;
             }
         }
 
@@ -52,8 +59,11 @@ namespace OrderingService.Actors
                 case OrderCreated orderCreated:
                     Order = orderCreated.Order;
                     break;
-                case OrderCanceled orderCancelled:
+                case OrderCanceled _:
                     Order.CancelOrder();
+                    break;
+                case OrderCleared _:
+                    Order = null;
                     break;
             }
         }

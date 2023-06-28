@@ -48,9 +48,9 @@ namespace ProductCatalogService
             return false;
         }
 
-        public async Task<InventoryStatus> UpdateInventory(int productId, int quantity)
+        public async Task<InventoryStatus> UpdateInventory(int productId, int quantity, int version)
         {
-            var result = await ProductCatalogActor.Ask(new UpdateInventory(productId, quantity));
+            var result = await ProductCatalogActor.Ask(new UpdateInventory(productId, quantity, version));
             return (InventoryStatus)result;
         }
     }

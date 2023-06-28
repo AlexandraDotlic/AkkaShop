@@ -19,6 +19,7 @@ namespace Domain.Entities
             Price = price;
             Quantity = inventory;
             ReservedQuantity = 0;
+            Version= 1;
         }
 
         public int Id { get; private set; }
@@ -26,6 +27,7 @@ namespace Domain.Entities
         public decimal Price { get; private set; }
         public int Quantity { get; private set; }
         public int ReservedQuantity { get; private set; }
+        public int Version { get; set; }
 
         /// <summary>
         /// update the inventory levels of the product, based on the quantity being added or removed from the inventory.

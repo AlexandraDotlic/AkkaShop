@@ -18,7 +18,7 @@ namespace CartAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<Cart>> GetCart()
         {
-            var cart = await CartService.GetCart(); //todo:
+            var cart = await CartService.GetCart();
             if (cart == null)
             {
                 return NotFound();

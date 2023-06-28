@@ -19,11 +19,12 @@ namespace ProductCatalogService.Actors
             {
                 if (Products.TryGetValue(reserveProduct.ProductId, out var product))
                 {
-                    if (product.Quantity >= reserveProduct.Quantity)
+                    if (product.Quantity >= reserveProduct.Quantity && product.Version == reserveProduct.Version)
                     {
                         product.ChangeQuantity(-reserveProduct.Quantity);
                         product.IncreaseReservedQuantity(reserveProduct.Quantity);
-                        Sender.Tell(new ReserveProductSuccess(reserveProduct.ProductId, reserveProduct.Quantity));
+                        product.Version++;
+                        Sender.Tell(new ReserveProductSuccess(reserveProduct.ProductId, reserveProduct.Quantity, product.Version));
                         Persist(product, _ =>
                         {
                             Products[reserveProduct.ProductId] = product;
@@ -46,6 +47,7 @@ namespace ProductCatalogService.Actors
                 {
                     product.ChangeQuantity(releaseProductReservation.Quantity);
                     product.DecreaseReservedQuantity(releaseProductReservation.Quantity);
+                    product.Version++;
                     Sender.Tell(new ReleaseProductReservationSuccess(releaseProductReservation.ProductId, releaseProductReservation.Quantity));
                     Persist(product, _ =>
                     {
@@ -69,7 +71,7 @@ namespace ProductCatalogService.Actors
                 {
                     if (product.CheckAvailability())
                     {
-                        Sender.Tell(new InventoryStatus(lookupProduct.ProductId, product.Quantity));
+                        Sender.Tell(new InventoryStatus(lookupProduct.ProductId, product.Quantity, product.Version));
                     }
                     else
                     {
@@ -86,12 +88,21 @@ namespace ProductCatalogService.Actors
             {
                 if (Products.TryGetValue(updateInv.ProductId, out var product))
                 {
-                    product.ChangeQuantity(updateInv.Quantity);
-                    Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Quantity));
-                    Persist(product, _ =>
+                    if(product.Version == updateInv.ProductVersion)
                     {
-                        Products[updateInv.ProductId] = product;
-                    });
+                        product.ChangeQuantity(updateInv.Quantity);
+                        product.Version++;
+                        Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Quantity, product.Version));
+                        Persist(product, _ =>
+                        {
+                            Products[updateInv.ProductId] = product;
+                        });
+                    }
+                    else
+                    {
+                        Sender.Tell("Update not possible");
+                    }
+                    
                 }
                 else
                 {
@@ -103,17 +114,25 @@ namespace ProductCatalogService.Actors
             {
                 if (Products.TryGetValue(addProduct.Product.Id, out var product))
                 {
-                    product.ChangeQuantity(addProduct.Product.Quantity);
-                    Sender.Tell(new InventoryStatus(addProduct.Product.Id, product.Quantity));
-                    Persist(product, _ =>
+                    if(product.Version == addProduct.Product.Version)
                     {
-                        Products[addProduct.Product.Id] = product;
-                    });
+                        product.ChangeQuantity(addProduct.Product.Quantity);
+                        product.Version++;
+                        Sender.Tell(new InventoryStatus(addProduct.Product.Id, product.Quantity, product.Version));
+                        Persist(product, _ =>
+                        {
+                            Products[addProduct.Product.Id] = product;
+                        });
+                    }
+                    else
+                    {
+                        Sender.Tell("adding product not possible");
+                    }                   
                 }
                 else
                 {
                     Products.Add(addProduct.Product.Id, addProduct.Product);
-                    Sender.Tell(new InventoryStatus(addProduct.Product.Id, addProduct.Product.Quantity));
+                    Sender.Tell(new InventoryStatus(addProduct.Product.Id, addProduct.Product.Quantity, 1));
                     Persist(addProduct, _ =>
                     {
                         Products[addProduct.Product.Id] = addProduct.Product;

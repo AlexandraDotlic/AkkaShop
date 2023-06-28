@@ -11,7 +11,7 @@ namespace ProductCatalogService
     public interface IProductCatalogService
     {
         Task<bool> LookupProduct(int productId);
-        Task<InventoryStatus> UpdateInventory(int productId, int quantity);
+        Task<InventoryStatus> UpdateInventory(int productId, int quantity, int version);
         Task<List<Product>> GetAllProducts();
         Task<InventoryStatus> AddProduct(Product product);
 

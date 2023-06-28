@@ -10,11 +10,13 @@ namespace Messages.Events
     {
         public int ProductId { get; private set; }
         public int Quantity { get; private set; }
+        public int Version { get; set; }
 
-        public ReserveProductSuccess(int productId, int quantity)
+        public ReserveProductSuccess(int productId, int quantity, int version)
         {
             ProductId = productId;
             Quantity = quantity;
+            Version = version;
         }
     }
 }

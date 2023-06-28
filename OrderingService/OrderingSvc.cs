@@ -31,9 +31,9 @@ namespace OrderingService
         {            
             var response = await OrderingCoordinatorActor.Ask(new CreateOrder(cart));
             if (response is OrderFailed)
-                return new OrderCreateResult { Success = false, Message = "failed to create order" };
+                return new OrderCreateResult { Success = false, Message = ((OrderFailed)response).Message };
 
-            return new OrderCreateResult { Success = true };
+            return new OrderCreateResult { Success = true, Message = "Order created." };
 
         }
     }
