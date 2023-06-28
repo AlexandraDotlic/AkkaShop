@@ -2,10 +2,10 @@
 {
     public class Order
     {
-        public Order(OrderStatus status, Cart cart)
+        public Order(OrderStatus status, Cart cart, string id)
         {
-           
-            Id = Guid.NewGuid().ToString();
+            Id = id;
+            //Id = Guid.NewGuid().ToString();
             Status = status;
             if (cart != null)
             {

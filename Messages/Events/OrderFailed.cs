@@ -9,11 +9,9 @@ namespace Messages.Events
     public class OrderFailed : OrderResult
     {
         public string Message { get; set; }
-        public OrderFailed()
-        {
+        public OrderFailed(string id): base(id) { }
 
-        }
-        public OrderFailed(string message)
+        public OrderFailed(string id, string message): base(id) 
         {
             Message= message;
         }

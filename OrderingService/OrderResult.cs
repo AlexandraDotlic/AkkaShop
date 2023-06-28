@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrderingService
 {
-    public class OrderCreateResult
+    public class OrderResult
     {
         public bool Success { get; set; }
         public string Message { get; set; }

@@ -8,7 +8,7 @@ namespace Messages.Events
 {
     public class OrderCanceled : OrderResult
     {
-        public OrderCanceled()
+        public OrderCanceled(string id): base(id)
         {
         }
 

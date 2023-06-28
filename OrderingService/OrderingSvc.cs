@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Azure;
 using Domain.Entities;
 using Messages.Commands;
 using Messages.Events;
@@ -12,28 +13,31 @@ namespace OrderingService
 {
     public class OrderingSvc : IOrderingService
     {
-        private readonly IActorRef OrderingActor;
         private readonly IActorRef OrderingCoordinatorActor;
 
 
-        public OrderingSvc(IActorRef orderingActor, IActorRef orderingCoordinatorActor)
+        public OrderingSvc(IActorRef orderingCoordinatorActor)
         {
-            OrderingActor = orderingActor;
             OrderingCoordinatorActor = orderingCoordinatorActor;
         }
 
-        public async Task CancelOrder(Order order)
+        public async Task<OrderResult> CancelOrder(Order order)
         {
-           OrderingActor.Tell(new CancelOrder(order));         
+            Messages.Events.OrderResult response = await OrderingCoordinatorActor.Ask<Messages.Events.OrderResult>(new CancelOrder(order));
+            if (response is OrderFailed)
+                return new OrderResult { Success = false, Message = ((OrderFailed)response).Message };
+
+            return new OrderResult { Success = true, Message = "Order canceled.", OrderId = response.OrderId };
+
         }
 
-        public async Task<OrderCreateResult> CreateOrder(Cart cart)
-        {            
-            var response = await OrderingCoordinatorActor.Ask(new CreateOrder(cart));
+        public async Task<OrderResult> CreateOrder(Cart cart)
+        {
+            Messages.Events.OrderResult response = await OrderingCoordinatorActor.Ask<Messages.Events.OrderResult>(new CreateOrder(cart));
             if (response is OrderFailed)
-                return new OrderCreateResult { Success = false, Message = ((OrderFailed)response).Message };
+                return new OrderResult { Success = false, Message = ((OrderFailed)response).Message };
 
-            return new OrderCreateResult { Success = true, Message = "Order created." };
+            return new OrderResult { Success = true, Message = "Order created." , OrderId = response.OrderId};
 
         }
     }

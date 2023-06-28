@@ -87,22 +87,14 @@ namespace ProductCatalogService.Actors
             Command<UpdateInventory>(updateInv =>
             {
                 if (Products.TryGetValue(updateInv.ProductId, out var product))
-                {
-                    if(product.Version == updateInv.ProductVersion)
+                {                   
+                    product.ChangeQuantity(updateInv.Quantity);
+                    product.Version++;
+                    Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Quantity, product.Version));
+                    Persist(product, _ =>
                     {
-                        product.ChangeQuantity(updateInv.Quantity);
-                        product.Version++;
-                        Sender.Tell(new InventoryStatus(updateInv.ProductId, product.Quantity, product.Version));
-                        Persist(product, _ =>
-                        {
-                            Products[updateInv.ProductId] = product;
-                        });
-                    }
-                    else
-                    {
-                        Sender.Tell("Update not possible");
-                    }
-                    
+                        Products[updateInv.ProductId] = product;
+                    });                                       
                 }
                 else
                 {
@@ -113,21 +105,14 @@ namespace ProductCatalogService.Actors
             Command<AddProduct>(addProduct =>
             {
                 if (Products.TryGetValue(addProduct.Product.Id, out var product))
-                {
-                    if(product.Version == addProduct.Product.Version)
+                {                   
+                    product.ChangeQuantity(addProduct.Product.Quantity);
+                    product.Version++;
+                    Sender.Tell(new InventoryStatus(addProduct.Product.Id, product.Quantity, product.Version));
+                    Persist(product, _ =>
                     {
-                        product.ChangeQuantity(addProduct.Product.Quantity);
-                        product.Version++;
-                        Sender.Tell(new InventoryStatus(addProduct.Product.Id, product.Quantity, product.Version));
-                        Persist(product, _ =>
-                        {
-                            Products[addProduct.Product.Id] = product;
-                        });
-                    }
-                    else
-                    {
-                        Sender.Tell("adding product not possible");
-                    }                   
+                        Products[addProduct.Product.Id] = product;
+                    });                
                 }
                 else
                 {

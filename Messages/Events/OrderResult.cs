@@ -8,5 +8,11 @@ namespace Messages.Events
 {
     public class OrderResult
     {
+        public OrderResult(string orderId)
+        {
+            OrderId = orderId;
+        }
+
+        public string OrderId { get; set; }
     }
 }

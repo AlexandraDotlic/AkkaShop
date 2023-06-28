@@ -8,8 +8,13 @@ namespace OrderingService.Actors
 {
     public class OrderingActor : UntypedPersistentActor
     {
-        public override string PersistenceId => nameof(OrderingActor);
+        public override string PersistenceId => nameof(OrderingActor) + "-" + Id;
         private Order Order;
+        private string Id;
+        public OrderingActor(string id)
+        {
+            Id = id;
+        }
         protected override void OnCommand(object message)
         {
             switch (message)
@@ -17,14 +22,14 @@ namespace OrderingService.Actors
                 case CreateOrder createOrder:
                     if (Order != null)
                     {
-                        Sender.Tell(new OrderFailed("An order is already being processed."));
+                        Sender.Tell(new OrderFailed(Order.Id, "An order is already being processed."));
                     }
                     else
                     {
-                        Order = new Order(OrderStatus.Created, createOrder.Cart);
+                        Order = new Order(OrderStatus.Created, createOrder.Cart, Id);
                         Persist(new OrderCreated(Order), _ =>
                         {
-                            Sender.Tell(new OrderSuccess());
+                            Sender.Tell(new OrderSuccess(Order.Id));
                         });
                     }                 
                     break;
@@ -36,17 +41,17 @@ namespace OrderingService.Actors
                     else
                     {
                         Order.CancelOrder();
-                        Persist(new OrderCanceled(), _ =>
+                        Persist(new OrderCanceled(Order.Id), _ =>
                         {
-                            Sender.Tell(new OrderSuccess());
+                            Sender.Tell(new OrderSuccess(Order.Id));
                         });
                     }                   
                     break;
                 case ClearOrder clearOrder:
                     Persist(new OrderCleared(), _ =>
                     {
+                        Sender.Tell(new Messages.Events.OrderResult(Order.Id));
                         Order = null;
-                        Sender.Tell(new OrderResult());
                     });
                     break;
             }

@@ -15,8 +15,6 @@ addresses.Add(cluster.SelfAddress);
 cluster.JoinSeedNodes(addresses);
 var mediator = DistributedPubSub.Get(system).Mediator;
 
-//Create OrderingActor
-var orderingActorRef = system.ActorOf(Props.Create(() => new OrderingActor()), "orderingActor");
 //Get productCatalogActor
 var productCatalogActorSelection = system.ActorSelection("akka.tcp://ProductCatalogAPI@127.0.0.1:8082/user/productCatalogActor");
 var productCatalogActorRef = await productCatalogActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
@@ -29,11 +27,11 @@ var cartCoordinatorActorSelection = system.ActorSelection("akka.tcp://CartAPI@12
 var cartCoordinatorActorRef = await cartActorSelection.ResolveOne(TimeSpan.FromSeconds(25));
 
 //Create orderingCoordinatorActor
-var orderingCoordinatorActorRef = system.ActorOf(Props.Create(() => new OrderingCoordinatorActor(productCatalogActorRef, orderingActorRef, cartCoordinatorActorRef)), "orderingCoordinatorActor");
+var orderingCoordinatorActorRef = system.ActorOf(Props.Create(() => new OrderingCoordinatorActor(productCatalogActorRef, cartCoordinatorActorRef)), "orderingCoordinatorActor");
 
 
 mediator.Tell(new Put(orderingCoordinatorActorRef));
-var orderingSvc = new OrderingSvc(orderingActorRef, orderingCoordinatorActorRef);
+var orderingSvc = new OrderingSvc(orderingCoordinatorActorRef);
 builder.Services.AddSingleton<IOrderingService>(orderingSvc);
 // Add services to the container.
 builder.Services.AddControllers();

@@ -8,7 +8,7 @@ namespace Messages.Events
 {
     public class OrderSuccess : OrderResult
     {
-        public OrderSuccess()
+        public OrderSuccess(string id): base(id)
         {
         }
 

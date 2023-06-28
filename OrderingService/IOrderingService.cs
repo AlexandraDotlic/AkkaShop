@@ -9,7 +9,7 @@ namespace OrderingService
 {
     public interface IOrderingService
     {
-        Task<OrderCreateResult> CreateOrder(Cart cart);
-        Task CancelOrder(Order order);
+        Task<OrderResult> CreateOrder(Cart cart);
+        Task<OrderResult> CancelOrder(Order order);
     }
 }
